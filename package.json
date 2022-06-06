@@ -1,12 +1,12 @@
 {
-  "name": "tdd-reviews",
+  "name": "social-network-kata",
   "version": "1.0.0",
-  "description": "",
+  "description": "TDD social kata example",
   "main": "index.js",
   "scripts": {
     "test": "jest"
   },
-  "author": "",
+  "author": "Pierre Criulanscy",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^28.1.1",

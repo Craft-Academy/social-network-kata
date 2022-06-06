@@ -1,5 +1,6 @@
 import { InMemoryTimelineRepository } from '../src/in-memory-timeline-repository';
 import { Message } from '../src/message';
+import { PublishMessage } from '../src/publish-message';
 import { Timeline } from '../src/timeline';
 
 describe('Feature: Publishing a message', () => {
@@ -35,20 +36,14 @@ describe('Feature: Publishing a message', () => {
 
 const createSut = () => {
   const timelineRepository = new InMemoryTimelineRepository();
-
+  const publishMessage = new PublishMessage(timelineRepository);
   return {
     givenTimeline(timeline: Timeline) {
       timelineRepository.givenTimeline(timeline);
     },
 
     async whenUserPostsTheMessage(message: Message) {
-      const timeline = await timelineRepository.getUserTimeline(message.author);
-      if (!timeline) {
-        throw new Error('no timeline');
-      }
-      timeline.messages.push(message);
-
-      return timelineRepository.saveTimeline(timeline);
+      return publishMessage.handle(message);
     },
 
     async thenTimelineShouldBe(expectedTimeline: Timeline) {
