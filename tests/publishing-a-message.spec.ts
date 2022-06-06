@@ -1,3 +1,6 @@
+import { Message } from '../src/message';
+import { Timeline } from '../src/timeline';
+
 describe('Feature: Publishing a message', () => {
   let sut: Sut;
   describe('Rule: A user can publish message on her personnal timeline', () => {
@@ -30,24 +33,18 @@ describe('Feature: Publishing a message', () => {
 });
 
 const createSut = () => {
-  let theTimeline: {
-    owner: string;
-    messages: { author: string; text: string }[];
-  };
+  let theTimeline: Timeline;
 
   return {
-    givenTimeline(timeline: { owner: string; messages: [] }) {
+    givenTimeline(timeline: Timeline) {
       theTimeline = timeline;
     },
 
-    whenUserPostsTheMessage(message: { author: string; text: string }) {
+    whenUserPostsTheMessage(message: Message) {
       theTimeline.messages.push(message);
     },
 
-    thenTimelineShouldBe(expectedTimeline: {
-      owner: string;
-      messages: { author: string; text: string }[];
-    }) {
+    thenTimelineShouldBe(expectedTimeline: Timeline) {
       expect(theTimeline).toEqual(expectedTimeline);
     },
   };
