@@ -30,22 +30,25 @@ describe('Feature: Publishing a message', () => {
 });
 
 const createSut = () => {
-  const messages: { author: string; text: string }[] = [];
+  let theTimeline: {
+    owner: string;
+    messages: { author: string; text: string }[];
+  };
+
   return {
-    givenTimeline(timeline: { owner: string; messages: [] }) {},
+    givenTimeline(timeline: { owner: string; messages: [] }) {
+      theTimeline = timeline;
+    },
 
     whenUserPostsTheMessage(message: { author: string; text: string }) {
-      messages.push(message);
+      theTimeline.messages.push(message);
     },
 
     thenTimelineShouldBe(expectedTimeline: {
       owner: string;
       messages: { author: string; text: string }[];
     }) {
-      expect(expectedTimeline).toEqual({
-        owner: 'alice',
-        messages,
-      });
+      expect(theTimeline).toEqual(expectedTimeline);
     },
   };
 };
