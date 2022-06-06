@@ -1,3 +1,4 @@
+import { InMemoryTimelineRepository } from '../src/in-memory-timeline-repository';
 import { Message } from '../src/message';
 import { Timeline } from '../src/timeline';
 
@@ -14,12 +15,12 @@ describe('Feature: Publishing a message', () => {
         messages: [],
       });
 
-      sut.whenUserPostsTheMessage({
+      await sut.whenUserPostsTheMessage({
         author: 'alice',
         text: 'Hello World !',
       });
 
-      sut.thenTimelineShouldBe({
+      await sut.thenTimelineShouldBe({
         owner: 'alice',
         messages: [
           {
@@ -33,18 +34,28 @@ describe('Feature: Publishing a message', () => {
 });
 
 const createSut = () => {
-  let theTimeline: Timeline;
+  const timelineRepository = new InMemoryTimelineRepository();
 
   return {
     givenTimeline(timeline: Timeline) {
-      theTimeline = timeline;
+      timelineRepository.givenTimeline(timeline);
     },
 
-    whenUserPostsTheMessage(message: Message) {
-      theTimeline.messages.push(message);
+    async whenUserPostsTheMessage(message: Message) {
+      const timeline = await timelineRepository.getUserTimeline(message.author);
+      if (!timeline) {
+        throw new Error('no timeline');
+      }
+      timeline.messages.push(message);
+
+      return timelineRepository.saveTimeline(timeline);
     },
 
-    thenTimelineShouldBe(expectedTimeline: Timeline) {
+    async thenTimelineShouldBe(expectedTimeline: Timeline) {
+      const theTimeline = await timelineRepository.getUserTimeline(
+        expectedTimeline.owner
+      );
+
       expect(theTimeline).toEqual(expectedTimeline);
     },
   };
