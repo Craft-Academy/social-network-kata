@@ -38,7 +38,17 @@ const createSut = () => {
     thenTimelineShouldBe(expectedTimeline: {
       owner: string;
       messages: { author: string; text: string }[];
-    }) {},
+    }) {
+      expect(expectedTimeline).toEqual({
+        owner: 'alice',
+        messages: [
+          {
+            author: 'alice',
+            text: 'Hello World !',
+          },
+        ],
+      });
+    },
   };
 };
 
