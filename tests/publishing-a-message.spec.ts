@@ -5,15 +5,15 @@ describe('Feature: Publishing a message', () => {
       sut = createSut();
     });
 
-    test('Example: Alice post a message on her empty timeline', async () => {
+    test('Example: Alice posts a message on her empty timeline', async () => {
       sut.givenTimeline({
         owner: 'alice',
         messages: [],
       });
 
       sut.whenUserPostsTheMessage({
-        user: 'alice',
-        message: 'Hello World !',
+        author: 'alice',
+        text: 'Hello World !',
       });
 
       sut.thenTimelineShouldBe({
@@ -29,6 +29,17 @@ describe('Feature: Publishing a message', () => {
   });
 });
 
-const createSut = () => {};
+const createSut = () => {
+  return {
+    givenTimeline(timeline: { owner: string; messages: [] }) {},
+
+    whenUserPostsTheMessage(message: { author: string; text: string }) {},
+
+    thenTimelineShouldBe(expectedTimeline: {
+      owner: string;
+      messages: { author: string; text: string }[];
+    }) {},
+  };
+};
 
 type Sut = ReturnType<typeof createSut>;
